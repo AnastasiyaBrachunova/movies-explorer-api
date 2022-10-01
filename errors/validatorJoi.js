@@ -1,12 +1,18 @@
 const { celebrate, Joi } = require('celebrate'); // ВАЛИДИРУЕМ ТОЛЬКО ТО, ЧТО ПОЛУЧАЕМ ОТ ПОЛЬЗОВАТЕЛЯ
+const validator = require('validator');
 
 const validateCreateUser = celebrate({ // signup
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
-    about: Joi.string().min(2).max(30),
-    avatar: Joi.string().pattern(/https?:\/\/\S+\.\S+/),
     email: Joi.string().required().email(),
     password: Joi.string().required(),
+  }),
+});
+
+const validateChangeUserInfo = celebrate({ // смена инфы
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    name: Joi.string().min(2).max(30),
   }),
 });
 
@@ -17,44 +23,61 @@ const validateLogin = celebrate({ // signin
   }),
 });
 
-// const validateGetUser = celebrate({ // получить по айди ПОЛЬЗОВАТЕЛЯ
-//   params: Joi.object().keys({
-//     userId: Joi.string().hex().length(24),
-//   }),
-// });
-
-const validateGetCardId = celebrate({ // получить по айди карточку для 3 роутов
+const validateGetMovieId = celebrate({ // получить по айди карточку для 3 роутов
   params: Joi.object().keys({
-    cardId: Joi.string().hex().length(24),
+    movieId: Joi.string().hex().length(24),
   }),
 });
 
-const validateChangeUserInfo = celebrate({ // смена инфы
+const validateСreateMovies = celebrate({
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
-    about: Joi.string().min(2).max(30),
-  }),
-});
-
-// const validateChangeAvatar = celebrate({ // смена аватара
-//   body: Joi.object().keys({
-//     avatar: Joi.string().pattern(/https?:\/\/\S+\.\S+/),
-//   }),
-// });
-
-const validateСreateCards = celebrate({ // создать карточку
-  body: Joi.object().keys({
-    name: Joi.string().required().min(2).max(30),
-    link: Joi.string().required().pattern(/https?:\/\/\S+\.\S+/),
+    country: Joi.string()
+      .required(),
+    director: Joi.string()
+      .required(),
+    duration: Joi.number()
+      .required(),
+    year: Joi.string()
+      .required(),
+    description: Joi.string()
+      .required(),
+    movieId: Joi.number()
+      .required(),
+    nameRU: Joi.string()
+      .required(),
+    nameEN: Joi.string()
+      .required(),
+    image: Joi.string()
+      .required()
+      .custom((value, helpers) => {
+        if (validator.isURL(value)) {
+          return value;
+        }
+        return helpers.message('Неправильный формат ссылки постера');
+      }),
+    trailerLink: Joi.string()
+      .required()
+      .custom((value, helpers) => {
+        if (validator.isURL(value)) {
+          return value;
+        }
+        return helpers.message('Неправильный формат ссылки трейлера');
+      }),
+    thumbnail: Joi.string()
+      .required()
+      .custom((value, helpers) => {
+        if (validator.isURL(value)) {
+          return value;
+        }
+        return helpers.message('Неправильный формат ссылки постера');
+      }),
   }),
 });
 
 module.exports = {
   validateCreateUser,
   validateLogin,
-  // validateGetUser,
   validateChangeUserInfo,
-  // validateChangeAvatar,
-  validateСreateCards,
-  validateGetCardId,
+  validateСreateMovies,
+  validateGetMovieId,
 };

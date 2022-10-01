@@ -1,6 +1,5 @@
 {
    "name": "diplom-anastasiya-brachunova",
-   "description": "[![Tests](https://github.com/yandex-praktikum/express-mesto-gha/actions/workflows/tests-13-sprint.yml/badge.svg)](https://github.com/yandex-praktikum/express-mesto-gha/actions/workflows/tests-13-sprint.yml) [![Tests](https://github.com/yandex-praktikum/express-mesto-gha/actions/workflows/tests-14-sprint.yml/badge.svg)](https://github.com/yandex-praktikum/express-mesto-gha/actions/workflows/tests-14-sprint.yml)\r # Проект Mesto фронтенд + бэкенд",
    "version": "1.0.0",
    "main": "index.js",
    "scripts": {
@@ -26,6 +25,7 @@
       "express-winston": "^4.2.0",
       "jsonwebtoken": "^8.5.1",
       "mongoose": "^6.6.2",
+      "validator": "^13.7.0",
       "winston": "^3.8.1"
    },
    "devDependencies": {

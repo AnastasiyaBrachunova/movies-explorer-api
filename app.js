@@ -12,7 +12,7 @@ const { requestLogger, errorLogger } = require('./middlewares/logger'); // ИМ�
 
 const authRouter = require('./routes/auth');
 const usersRouter = require('./routes/users');
-const cardsRouter = require('./routes/cards');
+const moviesRouter = require('./routes/movies');
 
 const NotFoundError = require('./errors/NotFoundError');
 const internalError = require('./errors/internalError');
@@ -56,7 +56,7 @@ app.get('/crash-test', () => {
 app.use('/', authRouter); // здесь роуты signup/signin
 app.use(auth); // защита роутов авторизацией
 app.use('/', auth, usersRouter);
-app.use('/', auth, cardsRouter);
+app.use('/', auth, moviesRouter);
 
 app.use(errorLogger); // ЛОГГЕР ОШИБОК
 

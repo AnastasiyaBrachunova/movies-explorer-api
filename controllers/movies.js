@@ -15,7 +15,7 @@ const createMovies = (req, res, next) => {
     year,
     description,
     image,
-    trailer,
+    trailerLink,
     nameRU,
     nameEN,
     thumbnail,
@@ -28,7 +28,7 @@ const createMovies = (req, res, next) => {
     year,
     description,
     image,
-    trailer,
+    trailerLink,
     nameRU,
     nameEN,
     thumbnail,
@@ -44,40 +44,6 @@ const createMovies = (req, res, next) => {
       }
     });
 };
-
-// const likeCard = (req, res, next) => {
-//   Card.findByIdAndUpdate(
-//     req.params.cardId,
-//     { $addToSet: { likes: req.user._id } },
-//     { new: true, runValidators: true },
-//   )
-//     .orFail(() => new NotFoundError('Карточка с указанным _id не найдена'))
-//     .then((like) => res.send(like))
-//     .catch((error) => {
-//       if (error.name === 'CastError') {
-//         next(new BadRequest('Переданы некорректные данные для лайка'));
-//       } else {
-//         next(error);
-//       }
-//     });
-// };
-
-// const dislikeCard = (req, res, next) => {
-//   Card.findByIdAndUpdate(
-//     req.params.cardId,
-//     { $pull: { likes: req.user._id } }, // убрать _id из массива
-//     { new: true, runValidators: true },
-//   )
-//     .orFail(() => new NotFoundError('Карточка с указанным _id не найдена'))
-//     .then((like) => res.send(like))
-//     .catch((error) => {
-//       if (error.name === 'CastError') {
-//         next(new BadRequest('Переданы некорректные данные для дизлайка'));
-//       } else {
-//         next(error);
-//       }
-//     });
-// };
 
 const deleteMovie = (req, res, next) => {
   const { cardId } = req.params;
@@ -103,8 +69,6 @@ const deleteMovie = (req, res, next) => {
 };
 
 module.exports = {
-  // likeCard,
-  // dislikeCard,
   getMovie,
   createMovies,
   deleteMovie,

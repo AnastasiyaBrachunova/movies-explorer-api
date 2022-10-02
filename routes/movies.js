@@ -13,6 +13,6 @@ const {
 
 router.get('/movies', getMovie); // возвращает все фильмы
 router.post('/movies', validateСreateMovies, createMovies); // создает карточку фильмв
-router.delete('/movies/_id', validateGetMovieId, deleteMovie); // удаляеn фильм по айди
+router.delete('/movies/:_id', validateGetMovieId, deleteMovie); // удаляеn фильм по айди
 
 module.exports = router;

@@ -16,12 +16,12 @@ const createMovies = (req, res, next) => {
     description,
     image,
     trailerLink,
-    nameRU,
-    nameEN,
     thumbnail,
     movieId,
+    nameRU,
+    nameEN,
   } = req.body;
-  Movie.create({
+  return Movie.create({
     country,
     director,
     duration,
@@ -29,13 +29,12 @@ const createMovies = (req, res, next) => {
     description,
     image,
     trailerLink,
-    nameRU,
-    nameEN,
     thumbnail,
     movieId,
-    owner: req.user._id,
+    nameRU,
+    nameEN,
   })
-    .then((card) => res.status(201).send(card))
+    .then((movie) => res.status(201).send(movie))
     .catch((error) => {
       if (error.name === 'ValidationError') {
         next(new BadRequest('Переданы некорректные данные при создании карточки'));
@@ -46,24 +45,27 @@ const createMovies = (req, res, next) => {
 };
 
 const deleteMovie = (req, res, next) => {
-  const { cardId } = req.params;
-  Movie.findById(cardId)
-    .orFail(() => new NotFoundError('Карточка с указанным _id не найдена'))
-    .then((card) => {
-      if (req.user._id !== card.owner._id.toString()) {
-        next(new ForbiddenError('Удаление чужой карточки недоступно'));
+  Movie.findById(req.params._id)
+    .orFail(() => {
+      throw new NotFoundError('Карточка с указанным _id не найдена');
+    })
+    .then((movie) => {
+      if (movie) {
+        if (String(movie.owner) !== req.user._id) {
+          movie.remove(req.params._id)
+            .then(() => res.send({ message: 'Карточка успешно удалена!' }));
+        } else {
+          next(new ForbiddenError('Удаление чужой карточки недоступно'));
+        }
       } else {
-        Movie.findByIdAndRemove(cardId)
-        // eslint-disable-next-line no-shadow
-          .then(() => {
-            res.send({ message: 'Карточка успешно удалена' });
-          }).catch(next);
+        next(new NotFoundError('Фильм не найден'));
       }
-    }).catch((error) => {
-      if (error.name === 'CastError') {
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
         next(new BadRequest('Переданы некорректные данные для удаления карточки'));
       } else {
-        next(error);
+        next(err);
       }
     });
 };

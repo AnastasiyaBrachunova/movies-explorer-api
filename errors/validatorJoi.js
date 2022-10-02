@@ -25,7 +25,7 @@ const validateLogin = celebrate({ // signin
 
 const validateGetMovieId = celebrate({ // получить по айди карточку для 3 роутов
   params: Joi.object().keys({
-    movieId: Joi.string().hex().length(24),
+    _id: Joi.string().hex().length(24).required(),
   }),
 });
 

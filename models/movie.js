@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const validator = require('validator');
 
 const movieSchema = new mongoose.Schema(
   {
@@ -25,39 +26,24 @@ const movieSchema = new mongoose.Schema(
     image: { // ссылка на постер к фильму
       type: String,
       required: true,
-      validate: {
-        validator(url) {
-          const urlRegex = /https?:\/\/\S+\.\S+/gm;
-          return urlRegex.test(url);
-        },
-      },
+      validate: validator.isURL,
     },
     trailerLink: { // ссылка на трейлер фильма
       type: String,
       required: true,
-      validate: {
-        validator(url) {
-          const urlRegex = /https?:\/\/\S+\.\S+/gm;
-          return urlRegex.test(url);
-        },
-      },
+      validate: validator.isURL,
+
     },
     thumbnail: { // миниатюрное изображение постера к фильму
       type: String,
       required: true,
-      validate: {
-        validator(url) {
-          const urlRegex = /https?:\/\/\S+\.\S+/gm;
-          return urlRegex.test(url);
-        },
-      },
+      validate: validator.isURL,
     },
     owner: { // _id пользователя, который сохранил фильм
       type: mongoose.Schema.Types.ObjectId,
-      required: true,
     },
     movieId: { // id фильма, который содержится в ответе сервиса MoviesExplorer
-      type: mongoose.Schema.Types.ObjectId,
+      type: Number,
       required: true,
     },
     nameRU: { // название фильма на русском языке

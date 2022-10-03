@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
 const cors = require('cors');
+const options = require('./utils/cors');
 
 const auth = require('./middlewares/auth');
 const { requestLogger, errorLogger } = require('./middlewares/logger'); // ИМПОРТ ЛОГОВ
@@ -22,22 +23,6 @@ const app = express(); // создали приложение
 const { PORT = 3000 } = process.env;
 
 mongoose.connect('mongodb://localhost:27017/bitfilmsdb');
-
-const options = {
-  origin: [
-    'http://localhost:3010',
-    'https://localhost:3010',
-    'http://abrachunova.front.nomoredomains.sbs',
-    'https://abrachunova.front.nomoredomains.sbs',
-    'https://AnastasiyaBrachunova.github.io',
-    'http://AnastasiyaBrachunova.github.io',
-  ],
-  methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
-  preflightContinue: false,
-  optionsSuccessStatus: 204,
-  allowedHeaders: ['Accept', 'X-Requested-With', 'Content-Type', 'Origin', 'Authorization'],
-  credentials: true,
-};
 
 app.use('*', cors(options));
 

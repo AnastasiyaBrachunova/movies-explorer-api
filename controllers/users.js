@@ -19,7 +19,11 @@ const createUser = (req, res, next) => { // создание пользоват�
     .then((hash) => User.create({
       name, email, password: hash,
     }))
-    .then((user) => res.status(201).send(user.deletePasswordFromUser()))
+    .then((user) => {
+      const userWithoutPass = user.toObject();
+      delete userWithoutPass.password;
+      res.status(201).send(userWithoutPass);
+    })
     .catch((error) => {
       if (error.name === 'ValidationError') {
         next(new BadRequest('Переданы некорректные данные при создании пользователя'));
@@ -47,19 +51,43 @@ const getCurrentUser = (req, res, next) => { // получение текуще�
     });
 };
 
-const login = (req, res, next) => { // авторизация(получение токена) signin
+// const login = (req, res, next) => { // авторизация(получение токена) signin
+//   const { email, password } = req.body;
+//   return User.findUserByCredentials(email, password)
+//     .then((user) => {
+//       const token = jwt.sign(
+//         { _id: user._id },
+//         NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
+//         { expiresIn: '7d' },
+//       );
+//       res.send({ token });
+//     }).catch(() => {
+//       next(new AuthorizationError('Ошибка авторизации'));
+//     });
+// };
+
+const login = (req, res, next) => {
   const { email, password } = req.body;
-  return User.findUserByCredentials(email, password)
+  User.findOne({ email }).select('+password')
     .then((user) => {
-      const token = jwt.sign(
-        { _id: user._id },
-        NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
-        { expiresIn: '7d' },
-      );
-      res.send({ token });
-    }).catch(() => {
-      next(new AuthorizationError('Ошибка авторизации'));
-    });
+      if (!user) {
+        throw new AuthorizationError('Ошибка авторизации');
+      }
+      return bcrypt.compare(password, user.password)
+        .then((matched) => {
+          if (!matched) {
+            throw new AuthorizationError('Ошибка авторизации');
+          }
+
+          const token = jwt.sign(
+            { _id: user._id },
+            NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
+            { expiresIn: '7d' },
+          );
+
+          res.send({ token });
+        });
+    }).catch(next);
 };
 
 const changeUserInfo = (req, res, next) => {

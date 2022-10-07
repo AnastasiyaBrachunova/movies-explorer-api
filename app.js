@@ -9,7 +9,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const options = require('./utils/cors');
 const limiter = require('./utils/rateLimiter');
-const MONGO_DB = require('./utils/config');
+// const MONGO_DB = require('./utils/config');
 
 // const auth = require('./middlewares/auth');
 const { requestLogger, errorLogger } = require('./middlewares/logger'); // ИМПОРТ ЛОГОВ
@@ -30,12 +30,12 @@ app.use(helmet()); // устанавливаt различные HTTP-загол
 const {
   PORT = 3000,
   // MONGO_PROD,
-  // NODE_ENV = 'develop',
+  // NODE_ENV,
 } = process.env;
 
-// mongoose.connect('mongodb://localhost:27017/bitfilmsdb');
+mongoose.connect('mongodb://localhost:27017/bitfilmsdb');
 
-mongoose.connect(MONGO_DB);
+// mongoose.connect(MONGO_DB);
 
 app.use('*', cors(options));
 

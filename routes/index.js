@@ -1,4 +1,7 @@
 const router = require('express').Router();
+const express = require('express'); // импортировали экспресс
+
+const app = express(); // создали приложение
 
 const auth = require('../middlewares/auth');
 
@@ -9,12 +12,12 @@ const moviesRouter = require('./movies');
 const NotFoundError = require('../errors/NotFoundError');
 const message = require('../utils/constant');
 
-router.use('/', authRouter); // здесь роуты signup/signin
-router.use(auth); // защита роутов авторизацией
-router.use('/', auth, usersRouter);
-router.use('/', auth, moviesRouter);
+app.use('/', authRouter); // здесь роуты signup/signin
+app.use(auth); // защита роутов авторизацией
+app.use('/', auth, usersRouter);
+app.use('/', auth, moviesRouter);
 
-router.use('*', () => {
+app.use('*', () => {
   throw new NotFoundError(message.NOT_FOUND_ERROR);
 });
 

@@ -31,13 +31,12 @@ app.use(helmet()); // устанавливаt различные HTTP-загол
 
 const {
   PORT = 3000,
-  // MONGO_PROD,
-  // NODE_ENV,
+  MONGO_PROD,
+  NODE_ENV,
 } = process.env;
 
-mongoose.connect(MONGO_DB);
-
 // mongoose.connect(MONGO_DB);
+mongoose.connect(NODE_ENV === 'production' ? MONGO_PROD : MONGO_DB);
 
 app.use('*', cors(options));
 

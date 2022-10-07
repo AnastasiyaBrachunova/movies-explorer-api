@@ -3,13 +3,14 @@ const mongoose = require('mongoose');
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
+    required: [true, 'Поле должно быть заполнено!'],
     minlength: 2,
     maxlength: 30,
     default: '',
   },
   email: {
     type: String,
-    required: true,
+    required: [true, 'Поле должно быть заполнено!'],
     unique: true,
     validate: {
       validator(email) {
@@ -20,7 +21,7 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,
+    required: [true, 'Поле должно быть заполнено!'],
     select: false,
   },
 

@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
-
-const JWT_SECRET = 'veryhiddensecretfullofsecrets';
+const JWT_SECRET = require('./config');
 
 const getJwtToken = (id) => jwt.sign(id, JWT_SECRET, { expiresIn: '7d' });
 

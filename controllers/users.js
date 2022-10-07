@@ -80,7 +80,7 @@ const changeUserInfo = (req, res, next) => {
   const { name, email } = req.body;
   User.findByIdAndUpdate(
     req.user._id,
-    { $set: { name, email } },
+    { name, email },
     { new: true, runValidators: true },
   )
     .orFail(() => new NotFoundError(message.NOT_FOUND_ERROR))
@@ -88,6 +88,8 @@ const changeUserInfo = (req, res, next) => {
     .catch((error) => {
       if (error.name === 'ValidationError') {
         next(new BadRequest(message.BAD_REQUEST_ERROR));
+      } else if (error.code === 11000) {
+        next(new ConflictError(message.CONFLICT_ERROR));
       } else {
         next(error);
       }

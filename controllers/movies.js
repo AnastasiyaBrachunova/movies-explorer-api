@@ -55,10 +55,10 @@ const deleteMovie = (req, res, next) => {
       if (movie) {
         if (String(movie.owner) !== req.user._id) {
           movie.remove(req.params._id)
-            .then(() => res.send(message.OK));
-        } else {
-          next(new ForbiddenError(message.FORBIDDEN_ERROR));
+            .then(() => res.send(message.OK))
+            .catch((err) => next(err));
         }
+        throw new ForbiddenError(message.FORBIDDEN_ERROR);
       } else {
         next(new NotFoundError(message.NOT_FOUND_ERROR));
       }

@@ -1,5 +1,5 @@
 const message = {
-  SERVER_ERROR: 'Ошибка на сервере',
+  INTERNAL_ERROR: 'Ошибка на сервере',
   BAD_REQUEST_ERROR: 'Введенные данные некорректны',
   FORBIDDEN_ERROR: 'Доступ запрещен',
   NOT_FOUND_ERROR: 'Запрашиваемый объект не найден',

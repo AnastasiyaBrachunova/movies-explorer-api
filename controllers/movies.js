@@ -3,6 +3,8 @@ const BadRequest = require('../errors/BadRequest');
 const NotFoundError = require('../errors/NotFoundError');
 const ForbiddenError = require('../errors/ForbiddenError');
 
+const message = require('../utils/constant');
+
 const getMovie = (req, res, next) => Movie.find({})
   .then((cards) => res.send(cards))
   .catch(next);
@@ -37,7 +39,7 @@ const createMovies = (req, res, next) => {
     .then((movie) => res.status(201).send(movie))
     .catch((error) => {
       if (error.name === 'ValidationError') {
-        next(new BadRequest('Переданы некорректные данные при создании карточки'));
+        next(new BadRequest(message.BAD_REQUEST_ERROR));
       } else {
         next(error);
       }
@@ -47,23 +49,23 @@ const createMovies = (req, res, next) => {
 const deleteMovie = (req, res, next) => {
   Movie.findById(req.params._id)
     .orFail(() => {
-      throw new NotFoundError('Карточка с указанным _id не найдена');
+      throw new NotFoundError(message.NOT_FOUND_ERROR);
     })
     .then((movie) => {
       if (movie) {
         if (String(movie.owner) !== req.user._id) {
           movie.remove(req.params._id)
-            .then(() => res.send({ message: 'Карточка успешно удалена!' }));
+            .then(() => res.send(message.OK));
         } else {
-          next(new ForbiddenError('Удаление чужой карточки недоступно'));
+          next(new ForbiddenError(message.FORBIDDEN_ERROR));
         }
       } else {
-        next(new NotFoundError('Фильм не найден'));
+        next(new NotFoundError(message.NOT_FOUND_ERROR));
       }
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequest('Переданы некорректные данные для удаления карточки'));
+        next(new BadRequest(message.BAD_REQUEST_ERROR));
       } else {
         next(err);
       }

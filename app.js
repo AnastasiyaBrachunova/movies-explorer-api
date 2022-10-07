@@ -17,6 +17,8 @@ const authRouter = require('./routes/auth');
 const usersRouter = require('./routes/users');
 const moviesRouter = require('./routes/movies');
 
+const message = require('./utils/constant');
+
 const NotFoundError = require('./errors/NotFoundError');
 const internalError = require('./errors/internalError');
 
@@ -45,7 +47,7 @@ app.use('/', auth, moviesRouter);
 app.use(errorLogger); // ЛОГГЕР ОШИБОК
 
 app.use((req, res, next) => {
-  next(new NotFoundError('Страница не найдена'));
+  next(new NotFoundError(message.NOT_FOUND_ERROR));
 });
 
 app.use(errors());

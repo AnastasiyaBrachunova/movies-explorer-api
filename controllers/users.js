@@ -43,13 +43,7 @@ const getCurrentUser = (req, res, next) => { // получение текуще�
     .then((user) => {
       res.send(user);
     })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        next(new BadRequest(message.BAD_REQUEST_ERROR));
-      } else {
-        next(err);
-      }
-    });
+    .catch(next);
 };
 
 const login = (req, res, next) => {

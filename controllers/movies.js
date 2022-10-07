@@ -51,10 +51,11 @@ const deleteMovie = (req, res, next) => {
     .orFail(() => {
       throw new NotFoundError(message.NOT_FOUND_ERROR);
     })
+    // eslint-disable-next-line consistent-return
     .then((movie) => {
       if (movie) {
         if (String(movie.owner) !== req.user._id) {
-          movie.remove(req.params._id)
+          return movie.remove(req.params._id)
             .then(() => res.send(message.OK))
             .catch((err) => next(err));
         }

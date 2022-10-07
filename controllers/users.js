@@ -7,10 +7,8 @@ const BadRequest = require('../errors/BadRequest');
 const NotFoundError = require('../errors/NotFoundError');
 const AuthorizationError = require('../errors/AuthorizationError');
 const ConflictError = require('../errors/ConflictError');
-const message = require('../utils/constant');
 
-const SALT_ROUNDS = require('../utils/config');
-
+const SALT_ROUNDS = 10;
 const { NODE_ENV, JWT_SECRET } = process.env;
 
 const createUser = (req, res, next) => { // создание пользователя signup
@@ -28,9 +26,9 @@ const createUser = (req, res, next) => { // создание пользоват�
     })
     .catch((error) => {
       if (error.name === 'ValidationError') {
-        next(new BadRequest(message.BAD_REQUEST_ERROR));
+        next(new BadRequest('Переданы некорректные данные при создании пользователя'));
       } else if (error.code === 11000) {
-        next(new ConflictError(message.CONFLICT_ERROR));
+        next(new ConflictError('Такой пользователь уже существует'));
       } else {
         next(error);
       }
@@ -40,24 +38,45 @@ const createUser = (req, res, next) => { // создание пользоват�
 const getCurrentUser = (req, res, next) => { // получение текущего (авторизованного) пользователя
   const userId = req.user._id;
   User.findById(userId)
-    .orFail(() => new NotFoundError(message.NOT_FOUND_ERROR))
+    .orFail(() => new NotFoundError('Пользователь с указанным _id не найден'))
     .then((user) => {
       res.send(user);
     })
-    .catch(next);
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new BadRequest('Переданы некорректные данные для получения пользователя'));
+      } else {
+        next(err);
+      }
+    });
 };
+
+// const login = (req, res, next) => { // авторизация(получение токена) signin
+//   const { email, password } = req.body;
+//   return User.findUserByCredentials(email, password)
+//     .then((user) => {
+//       const token = jwt.sign(
+//         { _id: user._id },
+//         NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
+//         { expiresIn: '7d' },
+//       );
+//       res.send({ token });
+//     }).catch(() => {
+//       next(new AuthorizationError('Ошибка авторизации'));
+//     });
+// };
 
 const login = (req, res, next) => {
   const { email, password } = req.body;
   User.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        throw new AuthorizationError(message.AUTHORIZATION_ERROR);
+        throw new AuthorizationError('Ошибка авторизации');
       }
       return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
-            throw new AuthorizationError(message.AUTHORIZATION_ERROR);
+            throw new AuthorizationError('Ошибка авторизации');
           }
 
           const token = jwt.sign(
@@ -75,16 +94,14 @@ const changeUserInfo = (req, res, next) => {
   const { name, email } = req.body;
   User.findByIdAndUpdate(
     req.user._id,
-    { name, email },
+    { $set: { name, email } },
     { new: true, runValidators: true },
   )
-    .orFail(() => new NotFoundError(message.NOT_FOUND_ERROR))
+    .orFail(() => new NotFoundError('Пользователь с указанным _id не найден'))
     .then((users) => res.send(users))
     .catch((error) => {
       if (error.name === 'ValidationError') {
-        next(new ConflictError(message.CONFLICT_ERROR));
-      } else if (error.code === 11000) {
-        next(new BadRequest(message.BAD_REQUEST_ERROR));
+        next(new BadRequest('Переданы некорректные данные при обновлении данных пользователя'));
       } else {
         next(error);
       }

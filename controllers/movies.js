@@ -72,7 +72,6 @@ const deleteMovie = (req, res, next) => {
     });
 };
 
-
 module.exports = {
   getMovie,
   createMovies,

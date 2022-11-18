@@ -4,6 +4,8 @@ const options = {
     'https://localhost:3010',
     'http://brachunova.diplom.nomoredomains.icu', // будущий домен фронта
     'https://brachunova.diplom.nomoredomains.icu',
+    'http://api.brachunova.diplom.nomoredomains.icu', // будущий домен фронта
+    'https://api.brachunova.diplom.nomoredomains.icu',
     'https://AnastasiyaBrachunova.github.io',
     'http://AnastasiyaBrachunova.github.io',
   ],

@@ -7,7 +7,7 @@ const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
 const cors = require('cors');
 const helmet = require('helmet');
-const options = require('./utils/cors');
+const { options } = require('./utils/cors');
 const limiter = require('./utils/rateLimiter');
 const { MONGO_DB } = require('./utils/config');
 

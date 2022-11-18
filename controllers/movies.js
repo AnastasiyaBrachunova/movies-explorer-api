@@ -1,7 +1,7 @@
 const Movie = require('../models/movie'); // экспортироали модель карточки
 const BadRequest = require('../errors/BadRequest');
 const NotFoundError = require('../errors/NotFoundError');
-// const ForbiddenError = require('../errors/ForbiddenError');
+const ForbiddenError = require('../errors/ForbiddenError');
 
 const message = require('../utils/constant');
 
@@ -78,17 +78,16 @@ const deleteMovie = (req, res, next) => {
       if (movie) {
         if (String(movie.owner) === req.user._id) {
           movie.remove(req.params._id)
-            .then((data) => res.status(200).send(data))
-            .catch((err) => next(err));
+            .then((delMovie) => res.send(delMovie));
+        } else {
+          next(new ForbiddenError('У вас нет прав для удаления'));
         }
       } else {
-        next(new NotFoundError(message.NOT_FOUND_ERROR));
+        next(new NotFoundError('Фильм не найден'));
       }
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
-        next(new BadRequest(message.BAD_REQUEST_ERROR));
-      } else {
+      if (err) {
         next(err);
       }
     });

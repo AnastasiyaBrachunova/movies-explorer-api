@@ -46,48 +46,27 @@ const createMovies = (req, res, next) => {
     });
 };
 
-// const deleteMovie = (req, res, next) => {
-//   Movie.findById(req.params._id)
-//     .orFail(() => {
-//       throw new NotFoundError(message.NOT_FOUND_ERROR);
-//     })
-//     .then((movie) => {
-//       if (movie) {
-//         if (String(movie.owner) !== req.user._id) {
-//           return movie.remove(req.params._id)
-//             .then(() => res.send(message.OK))
-//             .catch((err) => next(err));
-//         }
-//         throw new ForbiddenError(message.FORBIDDEN_ERROR);
-//       } else {
-//         return next(new NotFoundError(message.NOT_FOUND_ERROR));
-//       }
-//     })
-//     .catch((err) => {
-//       if (err.name === 'CastError') {
-//         next(new BadRequest(message.BAD_REQUEST_ERROR));
-//       } else {
-//         next(err);
-//       }
-//     });
-// };
-
 const deleteMovie = (req, res, next) => {
   Movie.findById(req.params._id)
+    .orFail(() => {
+      throw new NotFoundError(message.NOT_FOUND_ERROR);
+    })
     .then((movie) => {
       if (movie) {
-        if (String(movie.owner) === req.user._id) {
-          movie.remove(req.params._id)
-            .then((delMovie) => res.send(delMovie));
-        } else {
-          next(new ForbiddenError('У вас нет прав для удаления'));
+        if (String(movie.owner) !== req.user._id) {
+          return movie.remove(req.params._id)
+            .then(() => res.send(message.OK))
+            .catch((err) => next(err));
         }
+        throw new ForbiddenError(message.FORBIDDEN_ERROR);
       } else {
-        next(new NotFoundError('Фильм не найден'));
+        return next(new NotFoundError(message.NOT_FOUND_ERROR));
       }
     })
     .catch((err) => {
-      if (err) {
+      if (err.name === 'CastError') {
+        next(new BadRequest(message.BAD_REQUEST_ERROR));
+      } else {
         next(err);
       }
     });

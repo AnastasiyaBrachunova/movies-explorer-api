@@ -2,8 +2,8 @@
 
 
 Информация о размещении проекта в сети интернет:
-IP-адрес: 51.250.0.230
+IP-адрес: 158.160.42.176
 
-URL страницы: https://brachunova.diplom.nomoredomains.icu
+URL страницы: https://brachunova.diplom.nomoredomains.club/
 
 API-сервер: https://api.brachunova.diplom.nomoredomains.icu

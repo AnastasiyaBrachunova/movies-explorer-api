@@ -22,6 +22,7 @@ const createMovies = (req, res, next) => {
     movieId,
     nameRU,
     nameEN,
+    owner,
   } = req.body;
   return Movie.create({
     country,
@@ -35,6 +36,7 @@ const createMovies = (req, res, next) => {
     movieId,
     nameRU,
     nameEN,
+    owner,
   })
     .then((movie) => res.status(201).send(movie))
     .catch((error) => {

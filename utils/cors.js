@@ -2,8 +2,8 @@ const options = {
   origin: [
     'http://localhost:3000',
     'https://localhost:3000',
-    'http://brachunova.diplom.nomoredomains.icu', // будущий домен фронта
-    'https://brachunova.diplom.nomoredomains.icu',
+    'http://brachunova.diplom.nomoredomains.club', // будущий домен фронта
+    'https://brachunova.diplom.nomoredomains.club',
     'https://AnastasiyaBrachunova.github.io',
     'http://AnastasiyaBrachunova.github.io',
   ],

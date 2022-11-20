@@ -78,7 +78,7 @@ const deleteMovie = (req, res, next) => {
   Movie.findById(req.params._id)
     .then((movie) => {
       if (movie) {
-        if (String(movie.owner) !== req.user._id) {
+        if (String(movie.owner) === req.user._id) {
           movie.remove(req.params._id)
             .then((delMovie) => res.send(delMovie));
         } else {
